@@ -1,0 +1,64 @@
+pipeline{
+    agent any
+    environment{
+        CREATE_SCHEMA = 'true'
+        RUN_APP = 'true'
+    }
+    stages{
+        stage('Installing App requirements'){
+            steps{
+                sh 'bash Jenkins/install_app_requirements.sh'
+            }
+        }
+        stage('Running tests'){
+            steps{
+                withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
+                    sh 'bash Jenkins/run_tests.sh'
+                }
+            }
+        }
+        stage('Building container'){
+            steps{
+                sh 'bash Jenkins/build_container.sh'
+            }
+        }
+        stage('Running container'){
+            steps{
+                script{
+                    if (env.RUN_APP == 'true'){
+                        withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
+                            sh 'bash Jenkins/run_container.sh'
+                        }
+                    }
+                }
+            }
+        }
+        // stage('Run app'){
+        //     steps{
+        //         script{
+        //             if (env.RUN_APP == 'true'){
+        //                 withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
+        //                     sh 'bash jenkins/run_app.sh'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+    }
+    post{
+        always{
+            junit 'test-reports/unit-tests.xml'
+            cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'test-reports/coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
+        }
+        success{
+            echo '## Build successful.'
+            // sh 'bash Jenkins/build_container.sh'
+            // withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
+            //     sh 'bash Jenkins/run_container.sh'
+            // }
+        }
+        failure{
+            echo '## Build failed!'
+        }
+    }
+}

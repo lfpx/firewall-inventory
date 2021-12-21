@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<p>
+    Here is a list of your hosts:
+</p>
+{% for host in all_hosts %}
+    <p>
+        Host #{{ host.host_id }}<br>
+        {{ host.host_name }} - {{ host.host_ip }}<br>
+    </p>
+{% endfor %}
+{% endblock body%}
