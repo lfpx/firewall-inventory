@@ -6,7 +6,7 @@ class Hosts(db.Model):
     host_id = db.Column(db.Integer, nullable=False, primary_key=True)
     host_name = db.Column(db.String(255), nullable=False)
     host_ip = db.Column(db.String(50), nullable=False)
-    rules = db.relationship('Rules', backref='host')
+    rules = db.relationship('Rules', backref='host', cascade="all, delete-orphan")
 
 # Define the Rules table in the DB
 class Rules(db.Model):
