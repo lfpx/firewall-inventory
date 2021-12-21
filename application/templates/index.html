@@ -6,8 +6,10 @@
 </p>
 {% for host in all_hosts %}
     <p>
-        Host #{{ host.host_id }}<br>
-        {{ host.host_name }} - {{ host.host_ip }}<br>
+        Host #{{ host.host_id }} -
+        {{ host.host_name }} - 
+        {{ host.host_ip }} 
+        <a href="{{url_for('update_host', id=host.host_id)}}">Update</a><br>
     </p>
 {% endfor %}
 {% endblock body%}
