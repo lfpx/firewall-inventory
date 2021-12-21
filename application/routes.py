@@ -28,10 +28,16 @@ def update_host(id):
     form.submit.label.text="Update Host"
 
     if request.method=='POST':
-        # new_host = Hosts(host_name=form.host_name.data, host_ip=form.host_ip.data)
         host.host_name = form.host_name.data
         host.host_ip = form.host_ip.data
         db.session.commit()
         return redirect(url_for("home"))
 
     return render_template("create_host.html", title="Update a Host", form=form)
+
+@app.route('/delete-host/<int:id>')
+def delete_host(id):
+    host = Hosts.query.get(id)
+    db.session.delete(host)
+    db.session.commit()
+    return redirect(url_for("home"))

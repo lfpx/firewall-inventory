@@ -1,4 +1,5 @@
 from flask_testing import TestCase
+from sqlalchemy.sql.elements import Null
 from application import app, db
 from application.models import Hosts, Rules
 from flask import url_for
@@ -41,11 +42,17 @@ class TestViews(TestBase):
         response = self.client.get(url_for('update_host', id=1))
         self.assertEqual(response.status_code, 200)
 
+    def test_delete_host_get(self):
+        response = self.client.get(
+            url_for('delete_host', id=1), 
+            follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
 class TestRead(TestBase):
 
     def test_read_hosts(self):
         response = self.client.get(url_for('home'))
-        self.assertIn('Test Host 1', str(response.data))
+        self.assertIn('Test_Host_1', str(response.data))
 
 class TestCreate(TestBase):
 
@@ -84,3 +91,11 @@ class TestUpdate(TestBase):
         new_host = Hosts.query.get(1)
         self.assertEqual('Test_Host_4', new_host.host_name)
         self.assertEqual('1.1.1.4', new_host.host_ip)
+
+class TestDelete(TestBase):
+
+    def test_delete_host(self):
+        response = self.client.get(url_for('delete_host', id=1))        
+        new_host = Hosts.query.filter_by(host_id=1).scalar()
+        self.assertEqual(None, new_host)
+
