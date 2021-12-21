@@ -11,6 +11,7 @@ def home():
 @app.route('/create-host', methods=['GET','POST'])
 def create_host():
     form = HostForm()
+    form.submit.label.text = "Add Host"
 
     if request.method=='POST':
         new_host = Hosts(host_name=form.host_name.data, host_ip=form.host_ip.data)
@@ -19,3 +20,18 @@ def create_host():
         return redirect(url_for("home"))
 
     return render_template("create_host.html", title="Add a Host", form=form)
+
+@app.route('/update-host/<int:id>', methods=['GET','POST'])
+def update_host(id):
+    host = Hosts.query.get(id)
+    form = HostForm(host_name=host.host_name, host_ip=host.host_ip)
+    form.submit.label.text="Update Host"
+
+    if request.method=='POST':
+        # new_host = Hosts(host_name=form.host_name.data, host_ip=form.host_ip.data)
+        host.host_name = form.host_name.data
+        host.host_ip = form.host_ip.data
+        db.session.commit()
+        return redirect(url_for("home"))
+
+    return render_template("create_host.html", title="Update a Host", form=form)
