@@ -2,7 +2,6 @@ pipeline{
     agent any
     environment{
         CREATE_SCHEMA = 'true'
-        RUN_APP = 'true'
     }
     stages{
         stage('Installing App requirements'){
@@ -12,7 +11,7 @@ pipeline{
         }
         stage('Running tests'){
             steps{
-                withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
+                withCredentials([string(credentialsId: 'TEST_DATABASE_URI', variable: 'DATABASE_URI')]) {
                     sh 'bash Jenkins/run_tests.sh'
                 }
             }
