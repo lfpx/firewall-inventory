@@ -19,7 +19,7 @@ class TestBase(TestCase):
         # Will be called before every test
         db.create_all()
         host = Hosts(host_name="Test_Host_1", host_ip="1.1.1.1")
-        rule = Rules(port=80, allow=True, host=host)
+        rule = Rules(port=8080, allow=True, host=host)
         db.session.add(host)
         db.session.commit()
 
@@ -48,11 +48,19 @@ class TestViews(TestBase):
             follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
+    def test_create_rule_get(self):
+        response = self.client.get(url_for('create_rule', id=1))
+        self.assertEqual(response.status_code, 200)        
+
 class TestRead(TestBase):
 
     def test_read_hosts(self):
         response = self.client.get(url_for('home'))
         self.assertIn('Test_Host_1', str(response.data))
+
+    def test_read_rules(self):
+        response = self.client.get(url_for('home'))
+        self.assertIn('8080', str(response.data))
 
 class TestCreate(TestBase):
 
@@ -79,6 +87,16 @@ class TestCreate(TestBase):
         )
         self.assertIn('Test_Host_3', str(response.data))
         self.assertIn('3.3.3.3', str(response.data))
+
+    def test_create_rule(self):
+        response = self.client.post(
+            url_for('create_rule', id=1), 
+            json={'port':'22','allow':'True','host_id':'1'},
+            follow_redirects=True
+        )
+        new_rule = Rules.query.get(2)
+        self.assertEqual(22, new_rule.port)
+        self.assertEqual(True, new_rule.allow)
 
 class TestUpdate(TestBase):
 
