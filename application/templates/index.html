@@ -8,9 +8,17 @@
     <p>
         Host #{{ host.host_id }} -
         {{ host.host_name }} - 
-        {{ host.host_ip }} 
+        IP: {{ host.host_ip }} 
         <a href="{{url_for('update_host', id=host.host_id)}}">Update</a>
-        <a href="{{url_for('delete_host', id=host.host_id)}}">Delete</a><br>
+        <a href="{{url_for('delete_host', id=host.host_id)}}">Delete</a>
+        <a href="{{url_for('create_rule', id=host.host_id)}}">Add Rule</a><br>
+        {% for rule in host.rules %}
+            <p>
+                &emsp;Rule #{{ rule.rule_id }} -
+                Port: {{ rule.port }} - 
+                Allow: {{ rule.allow }} 
+            </p>
+        {% endfor %}
     </p>
 {% endfor %}
 {% endblock body%}
