@@ -21,6 +21,7 @@ class TestBase(TestCase):
         host = Hosts(host_name="Test_Host_1", host_ip="1.1.1.1")
         rule = Rules(port=8080, allow=True, host=host)
         db.session.add(host)
+        db.session.add(rule)
         db.session.commit()
 
     def tearDown(self):
@@ -39,17 +40,17 @@ class TestViews(TestBase):
         self.assertEqual(response.status_code, 200)
 
     def test_update_host_get(self):
-        response = self.client.get(url_for('update_host', id=1))
+        response = self.client.get(url_for('update_host', host_id=1))
         self.assertEqual(response.status_code, 200)
 
     def test_delete_host_get(self):
         response = self.client.get(
-            url_for('delete_host', id=1), 
+            url_for('delete_host', host_id=1), 
             follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
     def test_create_rule_get(self):
-        response = self.client.get(url_for('create_rule', id=1))
+        response = self.client.get(url_for('create_rule', host_id=1))
         self.assertEqual(response.status_code, 200)        
 
 class TestRead(TestBase):
@@ -90,7 +91,7 @@ class TestCreate(TestBase):
 
     def test_create_rule(self):
         response = self.client.post(
-            url_for('create_rule', id=1), 
+            url_for('create_rule', host_id=1), 
             json={'port':'22','allow':'True','host_id':'1'},
             follow_redirects=True
         )
@@ -102,7 +103,7 @@ class TestUpdate(TestBase):
 
     def test_update_host(self):
         response = self.client.post(
-            url_for('update_host', id=1), 
+            url_for('update_host', host_id=1), 
             json={'host_name':'Test_Host_4','host_ip':'1.1.1.4'},
             follow_redirects=True
         )
@@ -110,10 +111,21 @@ class TestUpdate(TestBase):
         self.assertEqual('Test_Host_4', new_host.host_name)
         self.assertEqual('1.1.1.4', new_host.host_ip)
 
+    def test_update_rule(self):
+        response = self.client.post(
+            url_for('update_rule', rule_id=1), 
+            json={'port':'9090','allow':'false','host_id':'1'},
+            follow_redirects=True
+        )
+        new_rule = Rules.query.get(1)
+        self.assertEqual(9090, new_rule.port)
+        self.assertEqual(False, new_rule.allow)
+        self.assertEqual(1, new_rule.host_id)
+
 class TestDelete(TestBase):
 
     def test_delete_host(self):
-        response = self.client.get(url_for('delete_host', id=1))        
+        response = self.client.get(url_for('delete_host', host_id=1))        
         new_host = Hosts.query.filter_by(host_id=1).scalar()
         self.assertEqual(None, new_host)
 
