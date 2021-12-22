@@ -69,3 +69,10 @@ def update_rule(rule_id):
         return redirect(url_for("home"))
 
     return render_template("rule_form.html", title="Update a Rule", form=form)
+
+@app.route('/delete-rule/<int:rule_id>')
+def delete_rule(rule_id):
+    rule = Rules.query.get(rule_id)
+    db.session.delete(rule)
+    db.session.commit()
+    return redirect(url_for("home"))

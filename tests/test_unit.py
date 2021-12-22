@@ -129,3 +129,7 @@ class TestDelete(TestBase):
         new_host = Hosts.query.filter_by(host_id=1).scalar()
         self.assertEqual(None, new_host)
 
+    def test_delete_rule(self):
+        response = self.client.get(url_for('delete_rule', rule_id=1))        
+        new_rule = Rules.query.filter_by(rule_id=1).scalar()
+        self.assertEqual(None, new_rule)

@@ -18,6 +18,7 @@
                 Port: {{ rule.port }} - 
                 Allow: {{ rule.allow }} 
                 <a href="{{url_for('update_rule', rule_id=rule.rule_id)}}">Update</a>
+                <a href="{{url_for('delete_rule', rule_id=rule.rule_id)}}">Delete</a>
             </p>
         {% endfor %}
     </p>
