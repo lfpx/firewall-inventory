@@ -1,0 +1,14 @@
+.git/
+.gitignore
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+Jenkins/
+Docker/
+.dockerignore
+tests/
+.coverage
+db_credentials
+README.md
+docs/
