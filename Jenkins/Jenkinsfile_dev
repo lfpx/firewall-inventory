@@ -17,9 +17,9 @@ pipeline{
                 }
             }
         }
-        stage('Building container'){
+        stage('Building container image'){
             steps{
-                sh 'bash Jenkins/build_container.sh'
+                sh 'bash Jenkins/build_image.sh'
             }
         }
         stage('Running container'){
