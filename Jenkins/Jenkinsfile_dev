@@ -3,6 +3,11 @@ pipeline{
     environment{
         CREATE_SCHEMA = 'true'
         RUN_APP = 'true'
+        DATABASE_URI=credentials('DATABASE_URI')
+        DOCKER_USERNAME=credentials('DOCKER_USERNAME')
+        DOCKER_TOKEN=credentials('DOCKER_TOKEN')
+        DEPLOYMENT_SERVER=credentials('DEPLOYMENT_SERVER')
+        DEPLOYMENT_PATH=credentials('DEPLOYMENT_PATH')
     }
     stages{
         stage('Installing App requirements'){
@@ -12,14 +17,14 @@ pipeline{
         }
         stage('Running tests'){
             steps{
-                withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
+                withCredentials([string(credentialsId: 'TEST_DATABASE_URI', variable: 'DATABASE_URI')]) {
                     sh 'bash Jenkins/run_tests.sh'
                 }
             }
         }
         stage('Building container image'){
             steps{
-                sh 'bash Jenkins/build_image.sh'
+                sh 'bash Jenkins/build_images.sh'
             }
         }
         stage('Running container'){
