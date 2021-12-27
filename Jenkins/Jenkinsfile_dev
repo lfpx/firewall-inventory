@@ -2,11 +2,11 @@ pipeline{
     agent any
     environment{
         CREATE_SCHEMA = 'true'
-        DATABASE_URI=credentials('DEV_DATABASE_URI')
+        DATABASE_URI=credentials('TEST_DATABASE_URI')
         DOCKER_USERNAME=credentials('DOCKER_USERNAME')
         DOCKER_TOKEN=credentials('DOCKER_TOKEN')
-        DEPLOYMENT_SERVER=credentials('DEPLOYMENT_SERVER')
-        DEPLOYMENT_PATH=credentials('DEPLOYMENT_PATH')
+        DEPLOYMENT_SERVER=credentials('TEST_DEPLOYMENT_SERVER')
+        DEPLOYMENT_PATH=credentials('TEST_DEPLOYMENT_PATH')
     }
     stages{
         stage('Installing App requirements'){
