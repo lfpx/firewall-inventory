@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<p>
+    Here is a list of your hosts and their respective rules:
+</p>
+{% for host in all_hosts %}
+    <p>
+        Host #{{ host.host_id }} -
+        {{ host.host_name }} - 
+        IP: {{ host.host_ip }} 
+        <a href="{{url_for('update_host', host_id=host.host_id)}}">Update</a>
+        <a href="{{url_for('delete_host', host_id=host.host_id)}}">Delete</a>
+        <a href="{{url_for('create_rule', host_id=host.host_id)}}">Add Rule</a><br>
+        {% for rule in host.rules %}
+            <p>
+                &emsp;Rule #{{ rule.rule_id }} -
+                Port: {{ rule.port }} - 
+                Allow: {{ rule.allow }} 
+                <a href="{{url_for('update_rule', rule_id=rule.rule_id)}}">Update</a>
+                <a href="{{url_for('delete_rule', rule_id=rule.rule_id)}}">Delete</a>
+            </p>
+        {% endfor %}
+    </p>
+{% endfor %}
+{% endblock body%}

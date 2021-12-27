@@ -1,0 +1,32 @@
+pipeline{
+    agent any
+    environment{
+        CREATE_SCHEMA = 'true'
+    }
+    stages{
+        stage('Installing App requirements'){
+            steps{
+                sh 'bash Jenkins/install_app_requirements.sh'
+            }
+        }
+        stage('Running tests'){
+            steps{
+                withCredentials([string(credentialsId: 'DEV_DATABASE_URI', variable: 'DATABASE_URI')]) {
+                    sh 'bash Jenkins/run_tests.sh'
+                }
+            }
+        }
+    }
+    post{
+        always{
+            junit 'test-reports/unit-tests.xml'
+            cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'test-reports/coverage.xml', conditionalCoverageTargets: '70, 0, 0', failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0', maxNumberOfBuilds: 0, methodCoverageTargets: '80, 0, 0', onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false
+        }
+        success{
+            echo '## Build successful.'
+        }
+        failure{
+            echo '## Build failed!'
+        }
+    }
+}

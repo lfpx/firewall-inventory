@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  application:
+    container_name: firewall-inventory
+    image: ${DOCKER_USERNAME}/firewall-inventory:${TAG:-latest}
+    build: 
+      context: ..
+      dockerfile: Docker/Dockerfile
+    ports:
+    - published: 80
+      target: 5000
+    environment:
+      DATABASE_URI:
+      CREATE_SCHEMA:
+    depends_on:
+    - database
+  database:
+    container_name: firewall-inventory-db
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD:    
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+      MYSQL_DATABASE: firewall-inventory
+    restart: always
+    volumes:
+    - type: volume
+      source: firewall-inventory-db-volume
+      target: /var/lib/mysql
+volumes:
+  firewall-inventory-db-volume:
