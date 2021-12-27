@@ -1,16 +1,14 @@
 #!/bin/bash
-SERVICE_NAME=firewall-inventory
-
 # Login to Docker Hub using access token
 docker login -u ${DOCKER_USERNAME} -p ${DOCKER_TOKEN}
 
 build(){
 export TAG="${1}"
-echo -e "\n# Building container image <${SERVICE_NAME}:${TAG:-latest}>"
+echo -e "\n# Building container image <firewall-inventory:${TAG:-latest}>"
 docker-compose -f Docker/docker-compose.yaml build
 
-echo -e "\n# Pushing image <${SERVICE_NAME}:${TAG:-latest}> to registry"
-docker-compose -f Docker/docker-compose.yaml push "${SERVICE_NAME}"
+echo -e "\n# Pushing image <firewall-inventory:${TAG:-latest}> to registry"
+docker-compose -f Docker/docker-compose.yaml push application
 }
 
 # Build and push image tagged <vYYYYMMDD-HHMM>
