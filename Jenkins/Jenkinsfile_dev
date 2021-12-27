@@ -2,8 +2,7 @@ pipeline{
     agent any
     environment{
         CREATE_SCHEMA = 'true'
-        RUN_APP = 'true'
-        DATABASE_URI=credentials('DATABASE_URI')
+        DATABASE_URI=credentials('DEV_DATABASE_URI')
         DOCKER_USERNAME=credentials('DOCKER_USERNAME')
         DOCKER_TOKEN=credentials('DOCKER_TOKEN')
         DEPLOYMENT_SERVER=credentials('DEPLOYMENT_SERVER')
@@ -17,9 +16,7 @@ pipeline{
         }
         stage('Running tests'){
             steps{
-                withCredentials([string(credentialsId: 'TEST_DATABASE_URI', variable: 'DATABASE_URI')]) {
-                    sh 'bash Jenkins/run_tests.sh'
-                }
+                sh 'bash Jenkins/run_tests.sh'
             }
         }
         stage('Building container image'){
@@ -27,28 +24,11 @@ pipeline{
                 sh 'bash Jenkins/build_images.sh'
             }
         }
-        stage('Running container'){
+        stage('Deploying container'){
             steps{
-                script{
-                    if (env.RUN_APP == 'true'){
-                        withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
-                            sh 'bash Jenkins/run_container.sh'
-                        }
-                    }
-                }
+                sh 'bash Jenkins/deploy.sh'
             }
         }
-        // stage('Run app'){
-        //     steps{
-        //         script{
-        //             if (env.RUN_APP == 'true'){
-        //                 withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
-        //                     sh 'bash jenkins/run_app.sh'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
     post{
         always{
@@ -57,10 +37,6 @@ pipeline{
         }
         success{
             echo '## Build successful.'
-            // sh 'bash Jenkins/build_container.sh'
-            // withCredentials([string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI')]) {
-            //     sh 'bash Jenkins/run_container.sh'
-            // }
         }
         failure{
             echo '## Build failed!'
