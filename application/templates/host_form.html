@@ -2,11 +2,24 @@
 
 {% block body %}
 
- <form method="POST">
+  <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.host_name.label }} {{ form.host_name }}<br>
-    {{ form.host_ip.label }} {{ form.host_ip }}<br>
-    {{ form.submit }}<br>
-</form>
+    <table>
+      <tbody>
+        <tr>
+          <td>{{ form.host_name.label }}</td>
+          <td>{{ form.host_name }}</td>
+        </tr>
+        <tr>
+          <td style="text-align: right;">{{ form.host_ip.label }}</td>
+          <td>{{ form.host_ip }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>{{ form.submit }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
 
 {% endblock body%}

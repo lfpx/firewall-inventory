@@ -2,11 +2,24 @@
 
 {% block body %}
 
- <form method="POST">
+  <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.port.label }} {{ form.port }}<br>
-    {{ form.allow.label }} {{ form.allow }}<br>
-    {{ form.submit }}<br>
-</form>
+    <table>
+      <tbody>
+        <tr>
+          <td style="text-align: right;">{{ form.port.label }}</td>
+          <td>&nbsp;{{ form.port }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.allow.label }}</td>
+          <td>{{ form.allow }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;{{ form.submit }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
 
 {% endblock body%}
