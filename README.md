@@ -114,12 +114,13 @@ Some key improvements I'd like to implement:
 * Improve the handling of connection losses between the application and the database when the swarm is redeployed or updated.
 * Use a single multibranch pipeline on Jenkins instead of three separate pipelines.
 * Use Docker containers to run the tests in the pipeline.
+* Use separate tags for development and production images pushed to Docker Hub.
 
 ## Pipeline Demo
 
 This screencast demonstrates the application's CRUD functionality as well as how changes in the code are deployed to production via CI/CD pipeline.
 
-![Pipeline Demo](./docs/pipeline_demo.mp4)
+[Screencast](https://drive.google.com/file/d/1xi8ezFVrM8TKw6vVu8DqytCEcZT_Yuc8/view)
 
 ## Author
 
